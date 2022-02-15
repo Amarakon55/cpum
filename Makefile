@@ -1,7 +1,7 @@
-PROG=cpum
+PROG=dcpu
 PREFIX=/usr/local
 BINDIR=${PREFIX}/bin
-LICENSEDIR=${PREFIX}/share/licenses/cpum
+LICENSEDIR=${PREFIX}/share/licenses/dcpu
 
 install:
 	chmod 755 ${PROG}
