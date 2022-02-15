@@ -15,7 +15,7 @@ maximum_frequency() {
 if [ -n "$1" ]; then
     $1
 else
-    cmd="$(printf 'governor\nminimum frequency\nmaximum frequency' | dmenu -i -l 10 -p 'DCPU')"
+    cmd="$(printf 'governor\nminimum frequency\nmaximum frequency' | dmenu -i -p 'DCPU')"
 
     if [ "$cmd" = "governor" ]; then 
 	governor
