@@ -1,5 +1,23 @@
 #!/bin/sh
 
+main() {
+    parse_opts "$@"
+
+    { [ -n "$help" ] && help; } ||
+    { [ -n "$governor" ] && governor; } ||
+    { [ -n "$minfreq" ] && minimum_frequency; } ||
+    { [ -n "$maxfreq" ] && maximum_frequency; } ||
+    { menu; } 
+}
+
+menu() {
+    cmd="$(printf 'governor\nminimum frequency\nmaximum frequency' | dmenu -i -p 'DCPU')"
+
+    { [ "$cmd" = "governor" ] && governor; } ||
+    { [ "$cmd" = "minimum frequency" ] && minimum_frequency; } ||
+    { [ "$cmd" = "maximum frequency" ] && maximum_frequency; }
+}
+
 governor() {
     cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors | tr ' ' '\n' | grep -v '^[[:space:]]*$' | dmenu -p "governor" | xargs -I {} doas-askpass cpu --governor "{}"
 }
@@ -12,16 +30,43 @@ maximum_frequency() {
     printf "400000\\n800000\\n1200000\\n1600000\\n2000000\\n2400000\\n2800000\\n3200000" | dmenu -i -p "maximum frequency" | xargs -I {} doas-askpass cpu --maxfreq "{}"
 }
 
-if [ -n "$1" ]; then
-    $1
-else
-    cmd="$(printf 'governor\nminimum frequency\nmaximum frequency' | dmenu -i -p 'DCPU')"
+help() {
+    printf "Usage:	dcpu [option]
 
-    if [ "$cmd" = "governor" ]; then 
-	governor
-    elif [ "$cmd" = "minimum frequency" ]; then
-	minimum_frequency
-    elif [ "$cmd" = "maximum frequency" ]; then
-	maximum_frequency
-    fi
-fi
+Options:
+ -g|--governor │ Manage governor
+-fl|--minfreq  │ Manage minimum frequency
+-fh|--maxfreq  │ Manage maximum frequency
+ -h|--help     │ Print this help message and exit
+When no arguments are supplied, the default menu will be used.
+\n"
+}
+
+parse_opts() {
+    while [ $# -gt 0 ]; do
+        key="$1"
+        case $key in
+        -h|--help)
+            help=1
+            shift
+            ;;
+	-g|--governor)
+	    governor=1
+	    shift
+	    ;;
+	-fl|--minfreq)
+	    minfreq=1
+	    shift
+	    ;;
+	-fh|--maxfreq)
+	    maxfreq=1
+	    shift
+	    ;;
+	*)
+	    shift
+	    ;;
+	esac
+    done
+}
+
+main "$@"
