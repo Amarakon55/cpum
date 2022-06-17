@@ -6,7 +6,8 @@ The usage is very simple:
 * `$ dcpu <option>` – choose an option before launching the program
 
 ## Dependencies
-1. cpu-cli
+1. dmenu
+1. cpupower
 
 ## (Un)Installation
 ### Universal
