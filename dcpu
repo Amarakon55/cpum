@@ -21,19 +21,19 @@ menu() {
 }
 
 governor() {
-    cpupower frequency-info | grep "available cpufreq governors: " | awk -F "available cpufreq governors: " {'print $2'} | tr ' ' '\n' | dmenu -p "governor" | xargs -I {} doas-askpass cpupower -c all frequency-set --governor "{}"
+    cpupower frequency-info | grep "available cpufreq governors: " | awk -F "available cpufreq governors: " {'print $2'} | tr ' ' '\n' | dmenu -p "governor" | xargs -I {} doas_askpass cpupower -c all frequency-set --governor "{}"
 }
 
 frequency() {
-    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "frequency" | tr -d ' ' | xargs -I {} doas-askpass cpupower -c all frequency-set --freq "{}"
+    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "frequency" | tr -d ' ' | xargs -I {} doas_askpass cpupower -c all frequency-set --freq "{}"
 }
 
 minimum_frequency() {
-    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "minimum frequency" | xargs -I {} doas-askpass cuppower -c all frequency-set --min "{}"
+    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "minimum frequency" | xargs -I {} doas_askpass cuppower -c all frequency-set --min "{}"
 }
 
 maximum_frequency() {
-    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "minimum frequency" | xargs -I {} doas-askpass cuppower -c all frequency-set --max "{}"
+    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "minimum frequency" | xargs -I {} doas_askpass cuppower -c all frequency-set --max "{}"
 }
 
 help() {
