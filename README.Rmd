@@ -1,0 +1,62 @@
+---
+title: DCPU - Dmenu Central Processing Unit
+output: amaryaml::github
+---
+
+DCPU is a simple Dmenu script that allows you to manage your CPU settings.
+It allows you to change:
+
+#. governor
+#. frequency
+#. minimum frequency
+#. maximum frequency
+
+# Usage
+
+```sh
+`# root` dcpu # launch the program and manage between options
+`# user` dcpu --help # see available options
+`# root` dcpu <option> # choose an option before launching the program
+```
+
+# Dependencies
+
+#. Dmenu
+#. cpupower
+
+# Installation
+
+## Universal
+
+```sh
+`# user` git clone https://github.com/amarakon/dcpu
+`# user` cd dcpu
+`# root` make install
+```
+
+## Gentoo
+
+```sh
+`# root` eselect repository add amarlay git https://github.com/amarakon/amarlay
+`# root` emerge --sync amarlay
+`# root` emerge x11-misc/dcpu
+```
+
+# Uninstallation
+
+## Universal
+
+```sh
+`# user` cd dcpu
+`# root` make uninstall
+```
+
+## Gentoo
+
+```sh
+`# root` emerge -c x11-misc/dcpu
+# Remove my overlay (optional)
+`# root` eselect-repository remove -f amarlay
+`# root` emerge --sync
+```
+
