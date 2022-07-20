@@ -3,21 +3,21 @@
 main() {
     parse_opts "$@"
 
-    { [ -n "$help" ] && help; } ||
-    { [ -n "$governor" ] && governor; } ||
-    { [ -n "$freq" ] && frequency; } ||
-    { [ -n "$minfreq" ] && minimum_frequency; } ||
-    { [ -n "$maxfreq" ] && maximum_frequency; } ||
-    { menu; } 
+    if [ -n "$help" ]; then help
+    elif [ -n "$governor" ]; then governor
+    elif [ -n "$freq" ]; then frequency
+    elif [ -n "$minfreq" ]; then minimum_frequency
+    elif [ -n "$maxfreq" ]; then maximum_frequency
+    else menu; fi
 }
 
 menu() {
     cmd="$(printf 'governor\nfrequency\nminimum frequency\nmaximum frequency' | dmenu -i -p 'DCPU')"
 
-    { [ "$cmd" = "governor" ] && governor; } ||
-    { [ "$cmd" = "frequency" ] && frequency; } ||
-    { [ "$cmd" = "minimum frequency" ] && minimum_frequency; } ||
-    { [ "$cmd" = "maximum frequency" ] && maximum_frequency; }
+    if [ "$cmd" = "governor" ]; then governor
+    elif [ "$cmd" = "frequency" ]; then frequency
+    elif [ "$cmd" = "minimum frequency" ]; then minimum_frequency
+    elif [ "$cmd" = "maximum frequency" ]; then maximum_frequency; fi
 }
 
 governor() {
