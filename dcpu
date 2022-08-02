@@ -1,43 +1,57 @@
 #!/bin/sh
 
 main() {
-    parse_opts "$@"
+	parse_opts "$@"
 
-    if [ -n "$help" ]; then help
-    elif [ -n "$governor" ]; then governor
-    elif [ -n "$freq" ]; then frequency
-    elif [ -n "$minfreq" ]; then minimum_frequency
-    elif [ -n "$maxfreq" ]; then maximum_frequency
-    else menu; fi
+	if [ -n "$help" ]; then help
+	elif [ -n "$governor" ]; then governor
+	elif [ -n "$freq" ]; then frequency
+	elif [ -n "$minfreq" ]; then minimum_frequency
+	elif [ -n "$maxfreq" ]; then maximum_frequency
+	else menu; fi
 }
 
 menu() {
-    cmd="$(printf 'governor\nfrequency\nminimum frequency\nmaximum frequency' | dmenu -i -p 'DCPU')"
+	cmd="$(printf 'governor\nfrequency\nminimum frequency\nmaximum frequency' | dmenu -i -p 'DCPU')"
 
-    if [ "$cmd" = "governor" ]; then governor
-    elif [ "$cmd" = "frequency" ]; then frequency
-    elif [ "$cmd" = "minimum frequency" ]; then minimum_frequency
-    elif [ "$cmd" = "maximum frequency" ]; then maximum_frequency; fi
+	if [ "$cmd" = "governor" ]; then governor
+	elif [ "$cmd" = "frequency" ]; then frequency
+	elif [ "$cmd" = "minimum frequency" ]; then minimum_frequency
+	elif [ "$cmd" = "maximum frequency" ]; then maximum_frequency; fi
 }
 
 governor() {
-    cpupower frequency-info | grep "available cpufreq governors: " | awk -F "available cpufreq governors: " {'print $2'} | tr ' ' '\n' | dmenu -p "governor" | xargs -I {} doas_askpass cpupower -c all frequency-set --governor "{}"
+	cpupower frequency-info | grep "available cpufreq governors: " |
+		awk -F "available cpufreq governors: " {'print $2'} | tr ' ' '\n' |
+		dmenu -p "governor" |
+		xargs -I {} doas_askpass cpupower -c all frequency-set --governor "{}"
 }
 
 frequency() {
-    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "frequency" | tr -d ' ' | xargs -I {} doas_askpass cpupower -c all frequency-set --freq "{}"
+	cpupower frequency-info | grep "frequency should be within " |
+		awk -F "frequency should be within " {'print $2'} |
+		rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' |
+		dmenu -p "frequency" | tr -d ' ' |
+		xargs -I {} doas_askpass cpupower -c all frequency-set --freq "{}"
 }
 
 minimum_frequency() {
-    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "minimum frequency" | xargs -I {} doas_askpass cuppower -c all frequency-set --min "{}"
+	cpupower frequency-info | grep "frequency should be within " |
+		awk -F "frequency should be within " {'print $2'} |
+		rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' |
+		dmenu -p "minimum frequency" |
+		xargs -I {} doas_askpass cpupower -c all frequency-set --min "{}"
 }
 
 maximum_frequency() {
-    cpupower frequency-info | grep "frequency should be within " | awk -F "frequency should be within " {'print $2'} | rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' | dmenu -p "minimum frequency" | xargs -I {} doas_askpass cuppower -c all frequency-set --max "{}"
+	cpupower frequency-info | grep "frequency should be within " |
+		awk -F "frequency should be within " {'print $2'} |
+		rev | tr -s " " | cut -d "." -f 2- | rev | sed 's/ and /\n/g' |
+		dmenu -p "minimum frequency" |
+		xargs -I {} doas_askpass cpupower -c all frequency-set --max "{}"
 }
 
-help() {
-    printf "Usage:	dcpu [option]
+help() { printf 'Usage:\t%s' "dcpu [option]
 
 Options:
  -g|--governor │ Manage governor
@@ -45,39 +59,21 @@ Options:
 -fl|--minfreq  │ Manage minimum frequency
 -fh|--maxfreq  │ Manage maximum frequency
  -h|--help     │ Print this help message and exit
+
 When no arguments are supplied, the default menu will be used.
-\n"
-}
+"; }
 
 parse_opts() {
-    while [ $# -gt 0 ]; do
-        key="$1"
-        case $key in
-        -h|--help)
-            help=1
-            shift
-            ;;
-	-g|--governor)
-	    governor=1
-	    shift
-	    ;;
-	-f|--freq)
-	    freq=1
-	    shift
-	    ;;
-	-fl|--minfreq)
-	    minfreq=1
-	    shift
-	    ;;
-	-fh|--maxfreq)
-	    maxfreq=1
-	    shift
-	    ;;
-	*)
-	    shift
-	    ;;
-	esac
-    done
+	while [ $# -gt 0 ]; do
+		case "$1" in
+			-h|--help) help=1 ; shift ;;
+			-g|--governor) governor=1 ; shift ;;
+			-f|--freq) freq=1 ; shift ;;
+			-fl|--minfreq) minfreq=1 ; shift ;;
+			-fh|--maxfreq) maxfreq=1 ; shift ;;
+			*) shift ;;
+		esac
+	done
 }
 
 main "$@"
