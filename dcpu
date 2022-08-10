@@ -1,10 +1,7 @@
 #!/bin/sh
 
-main() {
-	parse_opts "$@"
-
-	if [ -n "$help" ]; then help
-	elif [ -n "$governor" ]; then governor
+main() { parse_opts "$@"
+	if [ -n "$governor" ]; then governor
 	elif [ -n "$freq" ]; then frequency
 	elif [ -n "$minfreq" ]; then minimum_frequency
 	elif [ -n "$maxfreq" ]; then maximum_frequency
@@ -12,7 +9,8 @@ main() {
 }
 
 menu() {
-	cmd="$(printf 'governor\nfrequency\nminimum frequency\nmaximum frequency' | dmenu -i -p 'DCPU')"
+	cmd="$(printf "governor\nfrequency\nminimum frequency\nmaximum frequency" |
+		dmenu -i -p "DCPU")"
 
 	if [ "$cmd" = "governor" ]; then governor
 	elif [ "$cmd" = "frequency" ]; then frequency
@@ -64,13 +62,13 @@ When no arguments are supplied, the default menu will be used.
 "; }
 
 parse_opts() {
-	while [ $# -gt 0 ]; do
+	while [ -n "$1" ]; do
 		case "$1" in
-			-h|--help) help=1 ; shift ;;
-			-g|--governor) governor=1 ; shift ;;
-			-f|--freq) freq=1 ; shift ;;
-			-fl|--minfreq) minfreq=1 ; shift ;;
-			-fh|--maxfreq) maxfreq=1 ; shift ;;
+			-h|--help) help ; exit 0 ;;
+			-g|--governor) governor=1 shift ;;
+			-f|--freq) freq=1 shift ;;
+			-fl|--minfreq) minfreq=1 shift ;;
+			-fh|--maxfreq) maxfreq=1 shift ;;
 			*) shift ;;
 		esac
 	done
